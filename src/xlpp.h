@@ -16,6 +16,8 @@
 #define LPP_RELATIVE_HUMIDITY 104   // 1 byte, 0.5% unsigned
 #define LPP_ACCELEROMETER 113       // 2 bytes per axis, 0.001G
 #define LPP_BAROMETRIC_PRESSURE 115 // 2 bytes 0.1hPa unsigned
+#define LPP_GYROMETER 134     // 2 bytes per axis, 0.01 °/s
+#define LPP_GPS 136           // 3 byte lon/lat 0.0001 °, 3 bytes alt 0.01 meter
 
 #define LPP_VOLTAGE 116       // 2 bytes 0.01V unsigned
 #define LPP_CURRENT 117       // 2 bytes 0.001A unsigned
@@ -28,9 +30,7 @@
 #define LPP_ENERGY 131        // 4 byte, 0.001kWh, unsigned
 #define LPP_DIRECTION 132     // 2 bytes, 1deg, unsigned
 #define LPP_UNIXTIME 133      // 4 bytes, unsigned
-#define LPP_GYROMETER 134     // 2 bytes per axis, 0.01 °/s
 #define LPP_COLOUR 135        // 1 byte per RGB Color
-#define LPP_GPS 136           // 3 byte lon/lat 0.0001 °, 3 bytes alt 0.01 meter
 #define LPP_SWITCH 142        // 1 byte, 0/1
 
 #define XLPP_INTEGER 51    // n-byte (variable, variant integer), signed
@@ -48,6 +48,10 @@
 #define XLPP_FLAGS 56 // n-byte (1 byte per 8 flags), concatenated bools
 #define XLPP_BINARY 57 // n-byte (variable, variant length prefixed)
 #define XLPP_NULL 58 // 0 byte, no data
+
+#define CHAN_DELAY 253
+#define CHAN_ACTUATORS 252
+#define CHAN_ACTUATORS_WITH_CHAN 251
 
 #define XLPP_MAX_CAP 255
 
@@ -77,6 +81,13 @@ struct Colour
     uint8_t r;
     uint8_t g;
     uint8_t b;
+};
+
+struct Delay
+{
+    uint8_t h;
+    uint8_t m;
+    uint8_t s;
 };
 
 class XLPP
@@ -241,6 +252,20 @@ public:
     // void getFlags(bool *flags, int l);
     size_t getBinary(void* data);
     void getNull();
+
+    //
+
+    void addDelay(uint8_t h, uint8_t m, uint8_t s);
+    Delay getDelay();
+
+    void addActuators(uint8_t num, ...);
+    uint8_t getActuators(uint8_t* list);
+
+    void addActuatorsWithChannel(uint8_t num, ...);
+    uint8_t getActuatorsWithChannel(uint8_t* list);
+
+    //
+    
 
     uint8_t *buf;
     uint8_t len;

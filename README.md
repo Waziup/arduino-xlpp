@@ -31,3 +31,4 @@ void loop(void)
 
 ```
 
+All the functions that you can use can be found in: https://github.com/Waziup/arduino-xlpp/blob/main/src/xlpp.h

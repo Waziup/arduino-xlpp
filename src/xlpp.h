@@ -266,7 +266,7 @@ public:
     void addActuators(uint8_t num, ...);
     uint8_t getActuators(uint8_t* list);
 
-    //void addActuatorsWithChannel(uint8_t num, ...);
+    void addActuatorsWithChannel(uint8_t num, ...);
     uint8_t getActuatorsWithChannel(uint8_t* list);
 
     //

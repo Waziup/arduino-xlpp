@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "xlpp.h"
 #include <stdio.h>
 #include <stdarg.h> 
@@ -525,7 +524,7 @@ uint8_t XLPP::getActuators(uint8_t* list)
     return num;
 }
 
-/*void XLPP::addActuatorsWithChannel(uint8_t num, ...)
+void XLPP::addActuatorsWithChannel(uint8_t num, ...)
 {
     va_list valist;
     WRITE_uint8_t(CHAN_ACTUATORS_WITH_CHAN);
@@ -537,7 +536,7 @@ uint8_t XLPP::getActuators(uint8_t* list)
         WRITE_uint8_t(va_arg(valist, int));
     }
     va_end(valist); 
-}*/
+}
 
 uint8_t XLPP::getActuatorsWithChannel(uint8_t* list)
 {

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "xlpp.h"
+#include "../../src/xlpp.h"
 
 int printXLPP(XLPP &xlpp);
 int printSingleValue(XLPP &xlpp);
@@ -164,11 +164,11 @@ int main() {
 	);
 
 	// declare some actuators with channel
-	/*xlpp.addActuatorsWithChannel(3,
+	xlpp.addActuatorsWithChannel(3,
 		5, LPP_VOLTAGE,
 		6, LPP_CURRENT,
 		7, LPP_ACCELEROMETER
-	);*/
+	);
 
 	e = printXLPP(xlpp);
 	return e;

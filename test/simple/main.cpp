@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "../../src/xlpp.h"
+#include "xlpp.h"
 
 int printXLPP(XLPP &xlpp);
 int printSingleValue(XLPP &xlpp);
@@ -110,6 +110,9 @@ int main() {
 	xlpp.addInteger(8, 1352);
 	// xlpp.addInteger(9, 34568234954L);
 
+	// Detected Class by Camera
+	xlpp.addDetectedClass(9, 0);
+
 	// This xlpp can hold 250 bytes, so we print the buffer now
 	// and reset it.
 	e = printXLPP(xlpp);
@@ -161,11 +164,11 @@ int main() {
 	);
 
 	// declare some actuators with channel
-	xlpp.addActuatorsWithChannel(3,
+	/*xlpp.addActuatorsWithChannel(3,
 		5, LPP_VOLTAGE,
 		6, LPP_CURRENT,
 		7, LPP_ACCELEROMETER
-	);
+	);*/
 
 	e = printXLPP(xlpp);
 	return e;
@@ -328,6 +331,12 @@ int printSingleValue(XLPP &xlpp)
 	{
 		uint8_t v = xlpp.getSwitch();
 		printf("Switch: %s\n", v?"on":"off");
+		break;
+	}
+	case LPP_DETECTEDCLASS:
+	{
+		uint8_t c = xlpp.getDetectedClass();
+		printf("Detected Class by Camera: %d\n", c);
 		break;
 	}
 	case XLPP_INTEGER:

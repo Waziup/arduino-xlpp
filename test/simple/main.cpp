@@ -4,110 +4,116 @@
 
 int printXLPP(XLPP &xlpp);
 int printSingleValue(XLPP &xlpp);
+void printXlPPHex(XLPP &xlpp);
 
 int main() {
 	int e;
 	XLPP xlpp(250);
 
-	//
-	xlpp.addDigitalInput(1, 0x12);
-	xlpp.addDigitalOutput(2, 0x34);
+	int c = 1;
 
 	//
-	xlpp.addAnalogInput(2, -1.23);
-	xlpp.addAnalogOutput(3, 45.67);
+	xlpp.addDigitalInput(c++, 0x12);
+	xlpp.addDigitalOutput(c++, 0x34);
+
+	//
+	xlpp.addAnalogInput(c++, -1.23);
+	xlpp.addAnalogOutput(c++, 45.67);
 
 	// 1000 lux is a normal room illuminance value
-	xlpp.addLuminosity(4, 1000); // lux
+	xlpp.addLuminosity(c++, 1000); // lux
 
 	// 1 = presence, 0 = no presence
-	xlpp.addPresence(5, 1);
+	xlpp.addPresence(c++, 1);
 
 	// 
-	xlpp.addTemperature(6, 10.2); // °C
-	xlpp.addTemperature(7, 67.7); // °C
+	xlpp.addTemperature(c++, 10.2); // °C
+	xlpp.addTemperature(c++, 67.7); // °C
 
 	// 40.0 ~ 50.0 is a perfect relative humidity for health and comfort
-	xlpp.addRelativeHumidity(8, 44.5); // %
+	xlpp.addRelativeHumidity(c++, 44.5); // %
 
 	//
-	xlpp.addAccelerometer(9, 0.024, 1.202, -0.501); // G
-	xlpp.addAccelerometer(10, 0, 0, -1); // G = 9,807 m/s²
+	xlpp.addAccelerometer(c++, 0.024, 1.202, -0.501); // G
+	xlpp.addAccelerometer(c++, 0, 0, -1); // G = 9,807 m/s²
 
 	// 1 bar = 1000 hPa ≈ 14.7 psi, normal atmospheric pressure (at sea level)
-	xlpp.addBarometricPressure(11, 1000);
+	xlpp.addBarometricPressure(c++, 1000);
 	// 35 psi ≈ 2.413 bar ≈ 2413.2 hPa, good tire pressure
-	xlpp.addBarometricPressure(12, 2413.2);
+	xlpp.addBarometricPressure(c++, 2413.2);
 
 	// This xlpp can hold 250 bytes, so we print the buffer now
 	// and reset it. 
 	e = printXLPP(xlpp);
 	if (e != 0) return e;
 	xlpp.reset();
+	c = 1;
 
 	// 
-	xlpp.addVoltage(1, 1.23); // V
-	xlpp.addVoltage(2, 14.11); // V
+	xlpp.addVoltage(c++, 1.23); // V
+	xlpp.addVoltage(c++, 14.11); // V
 
 	//
-	xlpp.addCurrent(3, 2.312); // A
+	xlpp.addCurrent(c++, 2.312); // A
 
 	// human audible spectrum: 20 Hz to 20 kHz
-	xlpp.addFrequency(4, 20);
-	xlpp.addFrequency(5, 20000);
+	xlpp.addFrequency(c++, 20);
+	xlpp.addFrequency(c++, 20000);
 
 	//
-	xlpp.addPercentage(6, 20); // %
+	xlpp.addPercentage(c++, 20); // %
 
 	// Rome, Italiy, 37 m above sea level
-	xlpp.addAltitude(7, 37.0); // m
+	xlpp.addAltitude(c++, 37.0); // m
 	// Mount Everest
-	xlpp.addAltitude(8, 8849.0); // m
+	xlpp.addAltitude(c++, 8849.0); // m
 
 	// 250~300ppm CO2 level indoor, good value
-	xlpp.addConcentration(9, 300); // ppm
+	xlpp.addConcentration(c++, 300); // ppm
 	// very bad Co2 indoor level, workplace exposure limit
-	xlpp.addConcentration(10, 5000); // ppm
+	xlpp.addConcentration(c++, 5000); // ppm
 
 	//
-	xlpp.addPower(11, 113); // W
+	xlpp.addPower(c++, 113); // W
 
 	//
-	xlpp.addDistance(12, 2.246); // m
-	xlpp.addDistance(13, 0.030); // m, 1ft
+	xlpp.addDistance(c++, 2.246); // m
+	xlpp.addDistance(c++, 0.030); // m, 1ft
 
 	//
-	xlpp.addEnergy(14, 0.060); // a 60W light bulb, one hour
-	xlpp.addEnergy(15, 0.006); // a 6W LED, one hour
+	xlpp.addEnergy(c++, 0.060); // a 60W light bulb, one hour
+	xlpp.addEnergy(c++, 0.006); // a 6W LED, one hour
 
 	// This xlpp can hold 250 bytes, so we print the buffer now
 	// and reset it.
 	e = printXLPP(xlpp);
 	if (e != 0) return e;
 	xlpp.reset();
+	c = 1;
 
 	//
-	xlpp.addDirection(1, 135.0); // 135deg
+	xlpp.addDirection(c++, 135.0); // 135deg
 
 	// 01/05/2021 @ 11:23am (UTC)
 	// Time for some coffee.
-	xlpp.addUnixTime(2, 1609845780);
+	xlpp.addUnixTime(c++, 1609845780);
 
 	//
-	xlpp.addGyrometer(3, 0.12, 1.01, 0.05); // (x,y,z) °/s
+	xlpp.addGyrometer(c++, 0.12, 1.01, 0.05); // (x,y,z) °/s
 
 	// #0388fc, a nice blue
-	xlpp.addColour(4, 3, 136, 252); // (R,G,B)
+	xlpp.addColour(c++, 3, 136, 252); // (R,G,B)
 
 	//
-	xlpp.addGPS(5, 41.8912, 12.4922, 35.00); // Rome, Italy
+	xlpp.addGPS(c++, 41.8912, 12.4922, 35.00); // Rome, Italy
+	xlpp.addGPS(c++, 40.6976, -74.1444, 10.00); // New York, USA
 
 	// Switch, 1 == on, 0 == off
-	xlpp.addSwitch(6, 1);
+	xlpp.addSwitch(c++, 1);
 
 	//
-	xlpp.addInteger(7, 27);
-	xlpp.addInteger(8, 1352);
+	xlpp.addInteger(c++, 27);
+	xlpp.addInteger(c++, 1352);
 	// xlpp.addInteger(9, 34568234954L);
 
 	// This xlpp can hold 250 bytes, so we print the buffer now
@@ -115,16 +121,17 @@ int main() {
 	e = printXLPP(xlpp);
 	if (e != 0) return e;
 	xlpp.reset();
+	c = 1;
 
 	//
-	xlpp.addString(9, "AAAA");
+	xlpp.addString(c++, "AAAA");
 
 	//
-	xlpp.addBool(10, true);
-	xlpp.addBool(11, false);
+	xlpp.addBool(c++, true);
+	xlpp.addBool(c++, false);
 
 	//
-	xlpp.beginObject(12);
+	xlpp.beginObject(c++);
 	xlpp.addObjectKey("level");
 	xlpp.addPercentage(45.2);
 	xlpp.addObjectKey("shaky");
@@ -132,7 +139,7 @@ int main() {
 	xlpp.endObject();
 
 	//
-	xlpp.beginArray(13);
+	xlpp.beginArray(c++);
 	xlpp.addDigitalInput(4);
 	xlpp.addDigitalInput(25);
 	xlpp.addDigitalInput(6);
@@ -224,7 +231,7 @@ int printSingleValue(XLPP &xlpp)
 	case LPP_RELATIVE_HUMIDITY:
 	{
 		float f = xlpp.getRelativeHumidity();
-		printf("Relative Humidity: %.1f %\n", f);
+		printf("Relative Humidity: %.1f %%\n", f);
 		break;
 	}
 	case LPP_ACCELEROMETER:
@@ -254,7 +261,7 @@ int printSingleValue(XLPP &xlpp)
 	case LPP_FREQUENCY:
 	{
 		uint32_t u = xlpp.getFrequency();
-		printf("Frequency: %d Hz\n", u);
+		printf("Frequency: %u Hz\n", u);
 		break;
 	}
 	case LPP_PERCENTAGE:
@@ -265,8 +272,8 @@ int printSingleValue(XLPP &xlpp)
 	}
 	case LPP_ALTITUDE:
 	{
-		float f = xlpp.getAltitude();
-		printf("Altitude: %.0f m\n", f);
+		int16_t u = xlpp.getAltitude();
+		printf("Altitude: %d m\n", u);
 		break;
 	}
 	case LPP_CONCENTRATION:
@@ -320,8 +327,8 @@ int printSingleValue(XLPP &xlpp)
 	case LPP_GPS:
 	{
 		GPS p = xlpp.getGPS();
-		printf("GPS: lat %.4f, lon %.4f, alt %2f\n", p.latitude, p.longitude, p.altitude);
-		printf("See http://www.google.com/maps/place/%.4f,%.4f\n", p.latitude, p.longitude);
+		printf("GPS: lat %.4f, lon %.4f, alt %.2f\n", p.latitude, p.longitude, p.altitude);
+		printf("See https://google.com/maps/place/%.4f,%.4f\n", p.latitude, p.longitude);
 		break;
 	}
 	case LPP_SWITCH:
@@ -418,7 +425,7 @@ int printSingleValue(XLPP &xlpp)
 	return 0;
 }
 
-int printXLPP(XLPP &xlpp)
+void printXlPPHex(XLPP &xlpp)
 {
 	printf("HEX ");
 	for (int i = xlpp.offset; i < xlpp.len; i++)
@@ -426,6 +433,11 @@ int printXLPP(XLPP &xlpp)
 		printf("%02X", xlpp.buf[i]);
 	}
 	printf("\n");
+}
+
+int printXLPP(XLPP &xlpp)
+{
+	printXlPPHex(xlpp);
 
 	while (xlpp.offset < xlpp.len)
 	{

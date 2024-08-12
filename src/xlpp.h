@@ -157,8 +157,8 @@ public:
     void addPercentage(uint8_t channel, uint8_t value);
     void addPercentage(uint8_t value);
 
-    void addAltitude(uint8_t channel, float value);
-    void addAltitude(float value);
+    void addAltitude(uint8_t channel, int16_t value);
+    void addAltitude(int16_t value);
 
     void addPower(uint8_t channel, uint16_t value);
     void addPower(uint16_t value);
@@ -195,7 +195,7 @@ public:
     void beginObject(uint8_t channel);
     void beginObject();
     void addObjectKey(const char* key);
-    void getObjectKey(char* key);
+    void getObjectKey(char** key);
     void endObject();
 
     void beginArray(uint8_t channel);
@@ -236,7 +236,7 @@ public:
     float getCurrent();
     uint32_t getFrequency();
     uint8_t getPercentage();
-    float getAltitude();
+    int16_t getAltitude();
     uint16_t getPower();
     float getDistance();
     float getEnergy();
@@ -246,8 +246,7 @@ public:
     Colour getColour();
 
     int64_t getInteger();
-    void getString(char* s);
-    size_t getString(char* s, size_t limit);
+    void getString(char** s);
     bool getBool();
     // void getFlags(bool *flags, int l);
     size_t getBinary(void* data);

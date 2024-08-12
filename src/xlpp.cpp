@@ -21,9 +21,6 @@ uint8_t XLPP::getSize()
 
 ////////////////////
 
-#define int24_t int32_t
-#define uint24_t uint32_t
-
 #define _WRITE(v) buf[len++] = (v)&0xff;
 #define WRITE_uint8_t(v) _WRITE(v);
 #define WRITE_uint16_t(v) \
@@ -39,20 +36,33 @@ uint8_t XLPP::getSize()
     _WRITE(v >> 8);       \
     _WRITE(v);
 
+// convert from uint32_t to int24_t simulating two's complement
+int32_t uint24_to_int24(uint32_t v)
+{
+    return v & 0x800000 ? v - 0x1000000 : v;
+}
+
+// convert from int32_t to uint32_t simulating two's complement
+uint32_t int24_to_uint24(int32_t v)
+{
+    return v < 0 ? v + 0x1000000 : v;
+}
+
+
 #define WRITE_int8_t(v) WRITE_uint8_t(uint8_t(v));
 #define WRITE_int16_t(v) WRITE_uint16_t(uint16_t(v));
-#define WRITE_int24_t(v) WRITE_uint24_t(uint24_t(v));
+#define WRITE_int24_t(v) WRITE_uint24_t(int24_to_uint24(v));
 #define WRITE_int32_t(v) WRITE_uint32_t(uint32_t(v));
 
 #define _READ buf[offset++]
 #define READ_uint8_t _READ
 #define READ_uint16_t (uint16_t(_READ) << 8) + uint16_t(_READ)
-#define READ_uint24_t (uint24_t(_READ) << 16) + (uint24_t(_READ) << 8) + uint24_t(_READ)
+#define READ_uint24_t uint24_to_int24((uint32_t(_READ) << 16) + (uint32_t(_READ) << 8) + uint32_t(_READ))
 #define READ_uint32_t (uint32_t(_READ) << 24) + (uint32_t(_READ) << 16) + (uint32_t(_READ) << 8) + uint32_t(_READ)
 
 #define READ_int8_t int8_t(READ_uint8_t)
 #define READ_int16_t int16_t(READ_uint16_t)
-#define READ_int24_t int24_t(READ_uint24_t)
+#define READ_int24_t int32_t(READ_uint24_t)
 #define READ_int32_t int32_t(READ_uint32_t)
 
 #define XLPP_(NAME, TYPE, VALUE_T, MULTI, WIRE_T)        \
@@ -106,7 +116,7 @@ XLPP_(AnalogOutput, LPP_ANALOG_OUTPUT, float, 100, int16_t);
 XLPP_(Luminosity, LPP_LUMINOSITY, uint16_t, 1, uint16_t);
 XLPP_(Presence, LPP_PRESENCE, uint8_t, 1, uint8_t);
 XLPP_(Temperature, LPP_TEMPERATURE, float, 10, int16_t);
-XLPP_(RelativeHumidity, LPP_RELATIVE_HUMIDITY, float, 2, int8_t);
+XLPP_(RelativeHumidity, LPP_RELATIVE_HUMIDITY, float, 2, uint8_t);
 
 //
 
@@ -138,7 +148,7 @@ Accelerometer XLPP::getAccelerometer()
 
 //
 
-XLPP_(BarometricPressure, LPP_BAROMETRIC_PRESSURE, float, 10, int16_t);
+XLPP_(BarometricPressure, LPP_BAROMETRIC_PRESSURE, float, 10, uint16_t);
 
 //
 
@@ -202,12 +212,12 @@ XLPP_(Voltage, LPP_VOLTAGE, float, 100, uint16_t);
 XLPP_(Current, LPP_CURRENT, float, 1000, uint16_t);
 XLPP_(Frequency, LPP_FREQUENCY, uint32_t, 1, uint32_t);
 XLPP_(Percentage, LPP_PERCENTAGE, uint8_t, 1, uint8_t);
-XLPP_(Altitude, LPP_ALTITUDE, float, 1, uint16_t);
+XLPP_(Altitude, LPP_ALTITUDE, int16_t, 1, int16_t);
 XLPP_(Concentration, LPP_CONCENTRATION, uint16_t, 1, uint16_t);
 XLPP_(Power, LPP_POWER, uint16_t, 1, uint16_t);
 XLPP_(Distance, LPP_DISTANCE, float, 1000, uint32_t);
 XLPP_(Energy, LPP_ENERGY, float, 1000, uint32_t);
-XLPP_(Direction, LPP_DIRECTION, float, 1, uint16_t);
+XLPP_(Direction, LPP_DIRECTION, float, 50, int16_t);
 XLPP_(UnixTime, LPP_UNIXTIME, uint32_t, 1, uint32_t);
 XLPP_(Switch, LPP_SWITCH, uint8_t, 1, uint8_t);
 
@@ -305,31 +315,10 @@ void XLPP::addString(const char *str)
     len += strlen(str) + 1;
 }
 
-void XLPP::getString(char *str)
+void XLPP::getString(char **str)
 {
-    strcpy(str, (const char *)buf + offset);
-    offset += strlen(str) + 1;
-}
-
-size_t XLPP::getString(char *str, size_t limit)
-{
-    size_t n = 0;
-    for (; buf[offset] != 0 && n < limit; n++)
-        str[n] = buf[offset++];
-    if (n == limit)
-    {
-        while (buf[offset++])
-        {
-            // skip remaining bytes
-        }
-    }
-    else
-    {
-        for (; n < limit; n++)
-            str[n] = 0;
-        offset++;
-    }
-    return n;
+    *str = (char *)buf + offset;
+    offset += strlen(*str) + 1;
 }
 
 //
@@ -369,7 +358,7 @@ void XLPP::addObjectKey(const char *key)
     len += strlen(key) + 1;
 }
 
-void XLPP::getObjectKey(char *key)
+void XLPP::getObjectKey(char **key)
 {
     getString(key);
 }
@@ -471,16 +460,16 @@ void XLPP::getNull()
 void XLPP::addDelay(uint8_t h, uint8_t m, uint8_t s)
 {
     WRITE_uint8_t(CHAN_DELAY);
-    uint24_t t = uint24_t(h)*3600+uint24_t(m)*60+uint24_t(s);
+    uint32_t t = uint32_t(h)*3600+uint32_t(m)*60+uint32_t(s);
     WRITE_uint24_t(t);
 }
 
 Delay XLPP::getDelay()
 {
-    uint24_t t = READ_uint24_t;
-    uint24_t s = t%60;
-    uint24_t m = ((t-s)/60)%60;
-    uint24_t h = (t-m*60-s)/3600;
+    uint32_t t = READ_uint24_t;
+    uint32_t s = t%60;
+    uint32_t m = ((t-s)/60)%60;
+    uint32_t h = (t-m*60-s)/3600;
     return Delay{uint8_t(h), uint8_t(m), uint8_t(s)};
 }
 

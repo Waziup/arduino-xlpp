@@ -32,6 +32,7 @@
 #define LPP_UNIXTIME 133      // 4 bytes, unsigned
 #define LPP_COLOUR 135        // 1 byte per RGB Color
 #define LPP_SWITCH 142        // 1 byte, 0/1
+#define LPP_DETECTEDCLASS 147 // 1 byte per detected class by camera
 
 #define XLPP_INTEGER 51    // n-byte (variable, variant integer), signed
 #define XLPP_STRING 52     // n-byte (string length + 1), null-terminated C string
@@ -181,6 +182,9 @@ public:
     void addColour(uint8_t channel, uint8_t r, uint8_t g, uint8_t b);
     void addColour(uint8_t r, uint8_t g, uint8_t b);
 
+    void addDetectedClass(uint8_t channel, uint8_t detected_class);
+    void addDetectedClass(uint8_t detected_class);
+
     //
 
     void addInteger(uint8_t channel, int64_t i);
@@ -244,6 +248,7 @@ public:
     uint8_t getSwitch();
     uint16_t getConcentration();
     Colour getColour();
+    uint8_t getDetectedClass();
 
     int64_t getInteger();
     void getString(char** s);

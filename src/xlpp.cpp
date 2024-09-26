@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdarg.h> 
 
+
 XLPP::XLPP(uint8_t cap) : cap(len)
 {
     buf = (uint8_t *)malloc(cap);
@@ -220,6 +221,7 @@ XLPP_(Energy, LPP_ENERGY, float, 1000, uint32_t);
 XLPP_(Direction, LPP_DIRECTION, float, 50, int16_t);
 XLPP_(UnixTime, LPP_UNIXTIME, uint32_t, 1, uint32_t);
 XLPP_(Switch, LPP_SWITCH, uint8_t, 1, uint8_t);
+XLPP_(DetectedClass, LPP_DETECTEDCLASS, uint8_t, 1, uint8_t);
 
 //
 
@@ -245,6 +247,25 @@ Colour XLPP::getColour()
     c.b = READ_uint8_t;
     return c;
 }
+
+//void XLPP::addDetectedClass(uint8_t channel, uint8_t detected_class)
+//{
+//    buf[len++] = channel;
+//    addDetectedClass(detected_class);
+//}
+//
+//void XLPP::addDetectedClass(uint8_t detected_class)
+//{
+//    buf[len++] = LPP_DetectedClass;
+//    WRITE_uint8_t(detected_class);
+//}
+//
+//unit8_t XLPP::getDetectedClass()
+//{
+//    uint8_t detectedClass;
+//    detectedClass = READ_uint8_t;
+//    return detectedClass;
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 
